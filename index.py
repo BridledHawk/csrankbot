@@ -7,6 +7,9 @@ from io import BytesIO
 import sqlite3
 import http.client
 
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 def createConn():
     conn = sqlite3.connect("users.db")
     return(conn)
@@ -17,7 +20,10 @@ async def getImg(uid, channel):
     options = webdriver.ChromeOptions()
     options.headless = True
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36")
-    driver = webdriver.Chrome('chromedriver', chrome_options=options)
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.binary_location = GOOGLE_CHROME_PATH
+    driver = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=options)
     driver.get("https://csgostats.gg/player/"+uid+"#/live")
     driver.set_window_size(1920, 1080)
     try:
